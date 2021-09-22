@@ -1,6 +1,4 @@
 
-console.log(process.env.APM_ENABLE)
-
 if (process.env.APM_ENABLE == 'true') {
     console.log("Enable tracing")
     require('./tracing');
