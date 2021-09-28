@@ -12,7 +12,7 @@ const apmConfig = {
   apiKey: `ApiKey ${process.env.APM_API_KEY}`,
   url: process.env.APM_URL,
   serviceName: process.env.APM_SERVICE_NAME,
-  podId: process.env.POD_NAME
+  hostName: process.env.POD_NAME
 }
 
 const metadata = new Metadata()
@@ -29,7 +29,7 @@ const traceExporter = new CollectorTraceExporter(collectorOptions);
 const sdk = new opentelemetry.NodeSDK({
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: apmConfig.serviceName,
-    [SemanticResourceAttributes.K8S_POD_NAME]: apmConfig.podId
+    [SemanticResourceAttributes.HOST_NAME]: apmConfig.hostName
   }),
   traceExporter,
   instrumentations: [getNodeAutoInstrumentations()]
