@@ -29,7 +29,7 @@ const traceExporter = new CollectorTraceExporter(collectorOptions);
 const sdk = new opentelemetry.NodeSDK({
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: apmConfig.serviceName,
-    [SemanticResourceAttributes.SERVICE_INSTANCE_ID]: apmConfig.hostName
+    'service.node.name': apmConfig.hostName
   }),
   traceExporter,
   instrumentations: [getNodeAutoInstrumentations()]
