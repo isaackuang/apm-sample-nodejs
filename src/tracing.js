@@ -7,12 +7,12 @@ const { CollectorTraceExporter } =  require('@opentelemetry/exporter-collector-g
 const { Metadata } = require("@grpc/grpc-js");
 const { Resource } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+const { awsEc2Detector } = require('@opentelemetry/resource-detector-aws')
 
 const apmConfig = {
   apiKey: `ApiKey ${process.env.APM_API_KEY}`,
   url: process.env.APM_URL,
-  serviceName: process.env.APM_SERVICE_NAME,
-  hostName: process.env.POD_NAME
+  serviceName: process.env.APM_SERVICE_NAME
 }
 
 const metadata = new Metadata()
@@ -26,11 +26,18 @@ const collectorOptions = {
 // configure the SDK to export telemetry data to the console
 // enable all auto-instrumentations from the meta package
 const traceExporter = new CollectorTraceExporter(collectorOptions);
+
+const awsResource = await detectResources({
+  detectors: [awsEc2Detector],
+})
+
+const resource = new Resource({
+  [SemanticResourceAttributes.SERVICE_NAME]: apmConfig.serviceName
+})
+
+const resource = resource.merge(awsResource);
 const sdk = new opentelemetry.NodeSDK({
-  resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: apmConfig.serviceName,
-    'service.node.name': apmConfig.hostName
-  }),
+  resource: resource,
   traceExporter,
   instrumentations: [getNodeAutoInstrumentations()]
 });
