@@ -6,7 +6,6 @@ npm install --save @opentelemetry/sdk-node \
     @opentelemetry/exporter-collector-grpc \
     @grpc/grpc-js \
     @opentelemetry/resources \
-    @opentelemetry/api \
     @opentelemetry/semantic-conventions
 ```
 
